@@ -1,0 +1,64 @@
+[package.htop]
+repo = "htop-dev/htop"
+configure = """
+./autogen.sh
+./configure --prefix=/usr
+"""
+build = "make -j$(nproc)"
+install = "make DESTDIR={destdir} install"
+
+[package.neofetch]
+repo = "dylanaraps/neofetch"
+# version omitted — latest GitHub release will be used
+install = """
+install -Dm755 neofetch {destdir}/usr/bin/neofetch
+"""
+
+[package.dpdk]
+repo = "DPDK/dpdk"
+
+[package.octeon-roc]
+repo = "MarvellEmbeddedProcessors/marvell-octeon-roc"
+
+[package.libdnet]
+repo = "ofalk/libdnet"
+configure = """
+  ./configure \
+    --prefix {destdir}/usr \
+    --exec-prefix {destdir}/usr
+"""
+build = "make -j$(nproc)"
+install = "make install"
+
+[package.snort3-libml]
+repo = "snort3/libml"
+configure = """
+  ./configure.sh \
+    --prefix={destdir}/usr
+"""
+build = "make -C build -j$(nproc)"
+install = "make -C build install"
+
+[package.snort3-libdaq]
+repo = "snort3/libdaq"
+configure = """
+  ./bootstrap
+  ./configure \
+    --prefix {destdir}/usr \
+    --exec-prefix {destdir}/usr
+"""
+build = "make -j$(nproc)"
+install = "make install"
+
+[package.snort3]
+repo = "snort3/snort3"
+build-deps = "libdaq, uuid-dev, libsafec-dev, libnuma-dev, libunwind-dev, libluajit-5.1-dev, libhwloc-dev, libpcre2-dev"
+configure = """
+  ./configure_cmake.sh \
+    --builddir=_build \
+    --prefix={destdir}/usr \
+    --generator=Ninja
+"""
+build = "cmake --build _build"
+install = "cmake --install _build"
+
