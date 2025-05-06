@@ -204,7 +204,12 @@ pub async fn download_with_progress(
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let args = CliArgs::parse();
+    let mut args = CliArgs::parse();
+    if std::env::args().len() == 1 {
+        args.list = true;
+        args.all = true;
+    }
+
     let mut builder = env_logger::Builder::from_default_env();
     builder.format_timestamp(None);
 
